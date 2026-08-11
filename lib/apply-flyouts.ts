@@ -1,31 +1,30 @@
 import type { MenuFlyout } from './flyouts';
 import type { ToggleState } from './toggles';
 
-/** Original <li> elements saved before replacement, keyed by flyout id. */
-const originals = new Map<string, Element>();
-
 /** Active MutationObservers waiting for a target element to appear, keyed by flyout id. */
 const pendingObservers = new Map<string, MutationObserver>();
 
+/** Cleanup functions (remove panel + listeners) keyed by flyout id. */
+const cleanups = new Map<string, () => void>();
+
 /**
- * Applies or removes flyout submenus based on the current toggle state.
+ * Attaches or detaches flyout panels based on the current toggle state.
  * Idempotent — safe to call repeatedly. Uses a MutationObserver internally
  * when a target element isn't in the DOM yet (handles SPA lazy rendering).
  */
 export function applyFlyouts(flyouts: MenuFlyout[], state: ToggleState): void {
   for (const flyout of flyouts) {
     const isOn = Boolean(state[flyout.id]);
-    const isInjected = document.querySelector(`[data-tfx-flyout-id="${flyout.id}"]`) !== null;
+    const isAttached = document.querySelector(`[data-tfx-flyout-id="${flyout.id}"]`) !== null;
 
-    // Cancel any pending observer for this flyout before re-evaluating state.
     pendingObservers.get(flyout.id)?.disconnect();
     pendingObservers.delete(flyout.id);
 
-    if (isOn && !isInjected) {
-      if (!tryInjectFlyout(flyout)) {
+    if (isOn && !isAttached) {
+      if (!tryAttachFlyout(flyout)) {
         // Target not in DOM yet — watch for it (common on SPA initial load).
         const observer = new MutationObserver(() => {
-          if (tryInjectFlyout(flyout)) {
+          if (tryAttachFlyout(flyout)) {
             observer.disconnect();
             pendingObservers.delete(flyout.id);
           }
@@ -33,98 +32,119 @@ export function applyFlyouts(flyouts: MenuFlyout[], state: ToggleState): void {
         observer.observe(document.documentElement, { childList: true, subtree: true });
         pendingObservers.set(flyout.id, observer);
       }
-    } else if (!isOn && isInjected) {
-      removeFlyout(flyout);
+    } else if (!isOn && isAttached) {
+      detachFlyout(flyout);
     }
   }
 }
 
-/** Attempts to inject the flyout. Returns true on success, false if target not found. */
-function tryInjectFlyout(flyout: MenuFlyout): boolean {
+/**
+ * Attaches a hover-triggered floating panel to the target menu item.
+ * The original <li> is left intact — only a marker attribute and hover
+ * listeners are added. Returns true on success, false if the target isn't
+ * found in the DOM yet.
+ */
+function tryAttachFlyout(flyout: MenuFlyout): boolean {
   const anchor = document.querySelector(flyout.anchorSelector);
   if (!anchor) return false;
 
-  const originalLi = anchor.closest('li');
-  if (!originalLi) return false;
+  const li = anchor.closest('li');
+  if (!li) return false;
 
-  const itemLabel =
-    anchor.querySelector('.x-nav--nav-item-text')?.textContent ?? flyout.label;
+  li.setAttribute('data-tfx-flyout-id', flyout.id);
 
-  originals.set(flyout.id, originalLi.cloneNode(true) as Element);
+  const panel = buildPanel(flyout);
+  document.body.appendChild(panel);
 
-  const subNavId = `tfx-flyout-${flyout.id}`;
+  const controller = new AbortController();
+  const { signal } = controller;
+  let hideTimeout: ReturnType<typeof setTimeout> | undefined;
 
-  const newLi = document.createElement('li');
-  newLi.className = 'x-nav--nav-item x-nav--nav-item-menu';
-  newLi.setAttribute('data-tfx-flyout-id', flyout.id);
+  const showPanel = () => {
+    clearTimeout(hideTimeout);
+    const rect = li.getBoundingClientRect();
+    panel.style.top = `${rect.top}px`;
+    panel.style.left = `${rect.right + 4}px`;
+    panel.hidden = false;
+  };
 
-  const button = document.createElement('button');
-  button.className =
-    'x-nav-xui-button x-nav-xui-button-borderless-standard x-nav-xui-button-small x-nav-xui-button-fullwidth';
-  button.type = 'button';
-  button.setAttribute('aria-expanded', 'false');
-  button.setAttribute('aria-controls', subNavId);
+  const scheduleHide = () => {
+    hideTimeout = setTimeout(() => {
+      panel.hidden = true;
+    }, 150);
+  };
 
-  const buttonSpan = document.createElement('span');
-  buttonSpan.className = 'x-nav--nav-item-text';
-  buttonSpan.setAttribute('role', 'none');
-  buttonSpan.textContent = itemLabel;
-  button.appendChild(buttonSpan);
+  li.addEventListener('mouseenter', showPanel, { signal });
+  li.addEventListener('mouseleave', scheduleHide, { signal });
+  panel.addEventListener('mouseenter', () => clearTimeout(hideTimeout), { signal });
+  panel.addEventListener('mouseleave', scheduleHide, { signal });
 
-  const subNavDiv = document.createElement('div');
-  subNavDiv.className = 'x-nav--sub-nav-container';
-  subNavDiv.id = subNavId;
-  subNavDiv.hidden = true;
-
-  const ul = document.createElement('ul');
-  ul.className = 'x-nav--nav-item-list x-nav--nav-item-list-level-3';
-  ul.setAttribute('aria-label', `${itemLabel} sub-menu`);
-
-  for (const item of flyout.items) {
-    const itemLi = document.createElement('li');
-    itemLi.className = 'x-nav--nav-item x-nav--nav-item-link';
-
-    const a = document.createElement('a');
-    a.className =
-      'x-nav-xui-button x-nav-xui-button-borderless-standard x-nav-xui-button-small x-nav-xui-button-fullwidth';
-    a.href = item.href;
-    a.setAttribute('rel', 'noopener noreferrer');
-    a.setAttribute('role', 'link');
-    a.tabIndex = 0;
-
-    const span = document.createElement('span');
-    span.className = 'x-nav--nav-item-text';
-    span.setAttribute('role', 'none');
-    span.textContent = item.label;
-
-    a.appendChild(span);
-    itemLi.appendChild(a);
-    ul.appendChild(itemLi);
-  }
-
-  subNavDiv.appendChild(ul);
-  newLi.appendChild(button);
-  newLi.appendChild(subNavDiv);
-
-  button.addEventListener('click', () => {
-    const expanded = button.getAttribute('aria-expanded') === 'true';
-    button.setAttribute('aria-expanded', String(!expanded));
-    subNavDiv.hidden = expanded;
+  cleanups.set(flyout.id, () => {
+    controller.abort();
+    clearTimeout(hideTimeout);
+    panel.remove();
+    li.removeAttribute('data-tfx-flyout-id');
   });
 
-  originalLi.replaceWith(newLi);
   return true;
 }
 
-function removeFlyout(flyout: MenuFlyout): void {
-  const injectedLi = document.querySelector(`[data-tfx-flyout-id="${flyout.id}"]`);
-  if (!injectedLi) return;
-
-  const original = originals.get(flyout.id);
-  if (original) {
-    injectedLi.replaceWith(original.cloneNode(true));
-    originals.delete(flyout.id);
-  } else {
-    injectedLi.remove();
-  }
+function detachFlyout(flyout: MenuFlyout): void {
+  cleanups.get(flyout.id)?.();
+  cleanups.delete(flyout.id);
 }
+
+function buildPanel(flyout: MenuFlyout): HTMLDivElement {
+  const panel = document.createElement('div');
+  panel.hidden = true;
+  panel.setAttribute('data-tfx-panel-id', flyout.id);
+
+  Object.assign(panel.style, {
+    position: 'fixed',
+    zIndex: '999999',
+    background: '#fff',
+    border: '1px solid #d8d8d8',
+    borderRadius: '4px',
+    boxShadow: '0 4px 16px rgba(0,0,0,0.18)',
+    minWidth: '180px',
+    padding: '4px 0',
+  });
+
+  const ul = document.createElement('ul');
+  Object.assign(ul.style, { listStyle: 'none', margin: '0', padding: '0' });
+  ul.setAttribute('role', 'menu');
+
+  for (const item of flyout.items) {
+    const li = document.createElement('li');
+    li.setAttribute('role', 'none');
+
+    const a = document.createElement('a');
+    a.href = item.href;
+    a.setAttribute('role', 'menuitem');
+    a.setAttribute('rel', 'noopener noreferrer');
+    a.textContent = item.label;
+
+    Object.assign(a.style, {
+      display: 'block',
+      padding: '6px 16px',
+      fontSize: '13px',
+      color: '#1c1c1c',
+      textDecoration: 'none',
+      whiteSpace: 'nowrap',
+    });
+
+    a.addEventListener('mouseenter', () => {
+      a.style.background = '#f5f5f5';
+    });
+    a.addEventListener('mouseleave', () => {
+      a.style.background = '';
+    });
+
+    li.appendChild(a);
+    ul.appendChild(li);
+  }
+
+  panel.appendChild(ul);
+  return panel;
+}
+
