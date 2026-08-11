@@ -1,0 +1,25 @@
+{
+  "name": "tools-for-xero",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Browser extension providing bookkeeping tools and shortcuts for the Xero accounting web app.",
+  "type": "module",
+  "scripts": {
+    "dev": "wxt",
+    "dev:firefox": "wxt -b firefox",
+    "build": "wxt build",
+    "build:firefox": "wxt build -b firefox",
+    "zip": "wxt zip",
+    "zip:firefox": "wxt zip -b firefox",
+    "compile": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "postinstall": "wxt prepare"
+  },
+  "packageManager": "pnpm@11.18.0",
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0",
+    "wxt": "^0.21.2"
+  }
+}
