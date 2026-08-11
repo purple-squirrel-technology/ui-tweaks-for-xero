@@ -1,32 +1,47 @@
-import { toggleStateItem } from '../../lib/storage';
-import { TOGGLES } from '../../lib/toggles';
+import { toggleStateItem } from '@/lib/storage.ts';
+import { FLYOUTS } from '@/lib/flyouts.ts';
+import { TOGGLES } from '@/lib/toggles.ts';
+
+function makeToggleLabel(
+  id: string,
+  label: string,
+  state: Record<string, boolean>,
+): HTMLLabelElement {
+  const labelEl = document.createElement('label');
+  const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  checkbox.checked = Boolean(state[id]);
+  checkbox.addEventListener('change', async () => {
+    const current = await toggleStateItem.getValue();
+    await toggleStateItem.setValue({ ...current, [id]: checkbox.checked });
+  });
+  labelEl.appendChild(checkbox);
+  labelEl.append(label);
+  return labelEl;
+}
 
 async function render() {
   const container = document.getElementById('toggles');
   if (!container) return;
 
   const state = await toggleStateItem.getValue();
+  const children: Node[] = [];
 
-  container.replaceChildren(
-    ...TOGGLES.map((toggle) => {
-      const label = document.createElement('label');
+  if (TOGGLES.length > 0) {
+    const heading = document.createElement('h2');
+    heading.textContent = 'Hide elements';
+    children.push(heading);
+    for (const t of TOGGLES) children.push(makeToggleLabel(t.id, t.label, state));
+  }
 
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.checked = Boolean(state[toggle.id]);
-      checkbox.addEventListener('change', async () => {
-        const current = await toggleStateItem.getValue();
-        await toggleStateItem.setValue({
-          ...current,
-          [toggle.id]: checkbox.checked,
-        });
-      });
+  if (FLYOUTS.length > 0) {
+    const heading = document.createElement('h2');
+    heading.textContent = 'Menu flyouts';
+    children.push(heading);
+    for (const f of FLYOUTS) children.push(makeToggleLabel(f.id, f.label, state));
+  }
 
-      label.appendChild(checkbox);
-      label.append(toggle.label);
-      return label;
-    }),
-  );
+  container.replaceChildren(...children);
 }
 
 render();

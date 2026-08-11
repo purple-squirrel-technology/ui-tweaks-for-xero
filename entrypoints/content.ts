@@ -1,5 +1,7 @@
+import { applyFlyouts } from '../lib/apply-flyouts';
 import { buildHideStyle } from '../lib/hide-style';
 import { toggleStateItem } from '../lib/storage';
+import { FLYOUTS } from '../lib/flyouts';
 import { TOGGLES } from '../lib/toggles';
 
 export default defineContentScript({
@@ -11,6 +13,7 @@ export default defineContentScript({
 
     const applyState = (state: Record<string, boolean>) => {
       styleEl.textContent = buildHideStyle(TOGGLES, state);
+      applyFlyouts(FLYOUTS, state);
     };
 
     toggleStateItem.getValue().then(applyState);

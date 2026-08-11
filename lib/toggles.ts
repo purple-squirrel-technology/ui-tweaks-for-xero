@@ -1,5 +1,5 @@
 export interface ElementToggle {
-  /** Stable identifier, persisted in storage as the toggle's key. Never reuse an id for a different element. */
+  /** Stable identifier persisted in storage as the toggle's key. Never reuse an id for a different element. */
   id: string;
   /** Label shown next to the checkbox in the popup. */
   label: string;
