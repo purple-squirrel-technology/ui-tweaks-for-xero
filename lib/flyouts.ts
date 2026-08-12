@@ -25,11 +25,12 @@ export const FLYOUTS: MenuFlyout[] = [
     label: 'Invoices flyout menu',
     anchorSelector: 'a[href="https://go.xero.com/AccountsReceivable/Search.aspx"]',
     items: [
-      { label: 'All', href: '#' },
-      { label: 'Draft', href: '#' },
-      { label: 'Awaiting Approval', href: '#' },
-      { label: 'Awaiting Payment', href: '#' },
-      { label: 'Paid', href: '#' },
+      { label: 'All', href: 'https://go.xero.com/AccountsReceivable/Search.aspx' },
+      { label: 'Draft', href: 'https://go.xero.com/AccountsReceivable/Search.aspx?invoiceStatus=INVOICESTATUS/DRAFT' },
+      { label: 'Awaiting Approval', href: 'https://go.xero.com/AccountsReceivable/Search.aspx?invoiceStatus=INVOICESTATUS/SUBMITTED' },
+      { label: 'Awaiting Payment', href: 'https://go.xero.com/AccountsReceivable/Search.aspx?invoiceStatus=INVOICESTATUS/AUTHORISED' },
+      { label: 'Paid', href: 'https://go.xero.com/AccountsReceivable/Search.aspx?invoiceStatus=INVOICESTATUS/PAID' },
+      { label: 'Repeating', href: 'https://go.xero.com/AccountsReceivable/SearchRepeating.aspx' },
     ],
   },
 ];

@@ -23,6 +23,11 @@ export const TOGGLES: ElementToggle[] = [
     label: 'Example data toggle',
     selectors: ['.dashboard-template-toggle'],
   },
+  {
+    id: 'stripe-auto-pay',
+    label: 'Stripe Auto pay',
+    selectors: ['.x-paymentservices-tip','x-paymentservices-activation'],
+  }
 ];
 
 export type ToggleState = Record<string, boolean>;
