@@ -1,5 +1,6 @@
 import { toggleStateItem } from '@/lib/storage.ts';
 import { FLYOUTS } from '@/lib/flyouts.ts';
+import { MENU_ITEMS } from '@/lib/menu-items.ts';
 import { TOGGLES } from '@/lib/toggles.ts';
 
 function makeToggleLabel(
@@ -39,6 +40,13 @@ async function render() {
     heading.textContent = 'Menu flyouts';
     children.push(heading);
     for (const f of FLYOUTS) children.push(makeToggleLabel(f.id, f.label, state));
+  }
+
+  if (MENU_ITEMS.length > 0) {
+    const heading = document.createElement('h2');
+    heading.textContent = 'Menu items';
+    children.push(heading);
+    for (const m of MENU_ITEMS) children.push(makeToggleLabel(m.id, m.label, state));
   }
 
   container.replaceChildren(...children);
