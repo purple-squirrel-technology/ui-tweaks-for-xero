@@ -29,7 +29,7 @@ async function render() {
 
   if (TOGGLES.length > 0) {
     const heading = document.createElement('h2');
-    heading.textContent = 'Hide elements';
+    heading.textContent = 'Element styles';
     children.push(heading);
     for (const t of TOGGLES) children.push(makeToggleLabel(t.id, t.label, state));
   }
