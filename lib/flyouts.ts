@@ -32,5 +32,17 @@ export const FLYOUTS: MenuFlyout[] = [
       { label: 'Paid', href: 'https://go.xero.com/AccountsReceivable/Search.aspx?invoiceStatus=INVOICESTATUS/PAID' },
       { label: 'Repeating', href: 'https://go.xero.com/AccountsReceivable/SearchRepeating.aspx' },
     ],
-  },
+  },{
+    id: 'bills-flyout',
+    label: 'Bills flyout menu',
+    anchorSelector: 'a[href^="https://go.xero.com/app/"][href$="/bills"]',
+    items: [
+      { label: 'All', href: 'https://go.xero.com/app/bills/list/all' },
+      { label: 'Draft', href: 'https://go.xero.com/app/bills/list/draft' },
+      { label: 'Awaiting Approval', href: 'https://go.xero.com/app/bills/list/awaiting-approval' },
+      { label: 'Awaiting Payment', href: 'https://go.xero.com/app//bills/list/awaiting-payment' },
+      { label: 'Paid', href: 'https://go.xero.com/app/bills/list/paid' },
+      { label: 'Repeating', href: 'https://go.xero.com/app/bills/list/repeating' },
+    ],
+  }
 ];
