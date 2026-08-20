@@ -1,11 +1,11 @@
-import type { ElementToggle, ToggleState } from './toggles';
+import type {ElementToggle, ToggleState} from './toggles';
 
 function indentCss(css: string): string {
-  return css
-    .trim()
-    .split('\n')
-    .map((line) => `  ${line.trim()}`)
-    .join('\n');
+    return css
+        .trim()
+        .split('\n')
+        .map((line) => `  ${line.trim()}`)
+        .join('\n');
 }
 
 /**
@@ -13,8 +13,8 @@ function indentCss(css: string): string {
  * it can be unit tested without a DOM.
  */
 export function buildToggleStyle(toggles: ElementToggle[], state: ToggleState): string {
-  return toggles
-    .filter((toggle) => state[toggle.id] && toggle.selectors.length > 0 && toggle.css.trim() !== '')
-    .map((toggle) => `${toggle.selectors.join(',\n')} {\n${indentCss(toggle.css)}\n}`)
-    .join('\n\n');
+    return toggles
+        .filter((toggle) => state[toggle.id] && toggle.selectors.length > 0 && toggle.css.trim() !== '')
+        .map((toggle) => `${toggle.selectors.join(',\n')} {\n${indentCss(toggle.css)}\n}`)
+        .join('\n\n');
 }
