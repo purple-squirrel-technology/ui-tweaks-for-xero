@@ -19,6 +19,7 @@ const flyouts: MenuFlyout[] = [
 describe('applyFlyouts', () => {
     beforeEach(() => {
         vi.useRealTimers();
+        // noinspection HtmlUnknownAnchorTarget
         document.body.innerHTML = `
             <nav>
                 <ul>
@@ -67,6 +68,7 @@ describe('applyFlyouts', () => {
         expect(document.querySelector('[data-tfx-panel-id="reports-flyout"]')).toBeNull();
 
         const list = document.querySelector('ul');
+        // noinspection HtmlUnknownAnchorTarget
         list?.insertAdjacentHTML('beforeend', '<li><a href="#reports">Reports</a></li>');
         await Promise.resolve();
 
