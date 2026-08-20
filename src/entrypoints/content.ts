@@ -1,12 +1,12 @@
 // noinspection JSUnusedGlobalSymbols
 
-import {applyFlyouts} from '../lib/apply-flyouts';
-import {applyMenuItems} from '../lib/apply-menu-items';
-import {buildToggleStyle} from '../lib/toggle-style';
-import {toggleStateItem} from '../lib/storage';
-import {FLYOUTS} from '../lib/flyouts';
-import {MENU_ITEMS} from '../lib/menu-items';
-import {TOGGLES, type ToggleState} from '../lib/toggles';
+import {applyFlyouts} from '../lib/apply-flyouts.ts';
+import {applyMenuItems} from '../lib/apply-menu-items.ts';
+import {buildToggleStyle} from '../lib/toggle-style.ts';
+import {toggleStateItem} from '../lib/storage.ts';
+import {FLYOUTS} from '../lib/flyouts.ts';
+import {MENU_ITEMS} from '../lib/menu-items.ts';
+import {TOGGLES, type ToggleState} from '../lib/toggles.ts';
 
 export default defineContentScript({
     matches: ['https://go.xero.com/*', 'https://reporting.xero.com/*'],

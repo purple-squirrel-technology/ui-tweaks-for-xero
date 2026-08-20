@@ -1,8 +1,8 @@
 // @vitest-environment jsdom
 
 import {beforeEach, describe, expect, it} from 'vitest';
-import {applyMenuItems} from './apply-menu-items';
-import type {MenuItemToggle} from './menu-items';
+import {applyMenuItems} from '../apply-menu-items.ts';
+import type {MenuItemToggle} from '../menu-items.ts';
 
 const menuItems: MenuItemToggle[] = [
     {

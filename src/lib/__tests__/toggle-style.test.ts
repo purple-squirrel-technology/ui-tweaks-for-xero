@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
-import {buildToggleStyle} from './toggle-style';
-import type {ElementToggle} from './toggles';
+import {buildToggleStyle} from '../toggle-style.ts';
+import type {ElementToggle} from '../toggles.ts';
 
 const toggles: ElementToggle[] = [
     {id: 'a', label: 'A', selectors: ['.a'], css: 'display: none !important;'},

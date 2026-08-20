@@ -1,5 +1,5 @@
-import type {MenuItemPosition, MenuItemToggle} from './menu-items';
-import type {ToggleState} from './toggles';
+import type {MenuItemPosition, MenuItemToggle} from './menu-items.ts';
+import type {ToggleState} from './toggles.ts';
 
 /** Active MutationObservers waiting for menu nodes to appear, keyed by menu item id. */
 const pendingObservers = new Map<string, MutationObserver>();

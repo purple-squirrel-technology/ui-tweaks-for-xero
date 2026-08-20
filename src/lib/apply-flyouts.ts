@@ -1,5 +1,5 @@
-import type {MenuFlyout} from './flyouts';
-import type {ToggleState} from './toggles';
+import type {MenuFlyout} from './flyouts.ts';
+import type {ToggleState} from './toggles.ts';
 
 /** Active MutationObservers waiting for a target element to appear, keyed by flyout id. */
 const pendingObservers = new Map<string, MutationObserver>();

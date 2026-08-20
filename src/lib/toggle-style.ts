@@ -1,4 +1,4 @@
-import type {ElementToggle, ToggleState} from './toggles';
+import type {ElementToggle, ToggleState} from './toggles.ts';
 
 function indentCss(css: string): string {
     return css

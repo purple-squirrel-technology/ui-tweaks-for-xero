@@ -7,7 +7,7 @@ export default defineConfig({
     autoIcons: {
         baseIconPath: 'assets/logo.svg'
     },
-    srcDir: '.',
+    srcDir: 'src',
     manifest: {
         name: 'Tools for Xero',
         description: 'UI shortcuts and improvements for the Xero accounting web app.',
@@ -21,8 +21,12 @@ export default defineConfig({
                 id: 'tools-for-xero@purplesquirreltechnology.com',
                 data_collection_permissions: {
                     required: ['none']
-                }
+                },
+                strict_min_version: '128.0'
             }
         }
     },
+    zip: {
+        excludeSources: ['todos.txt', '*.txt'],
+    }
 });
