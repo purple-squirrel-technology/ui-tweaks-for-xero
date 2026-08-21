@@ -9,7 +9,7 @@ export default defineConfig({
     },
     srcDir: 'src',
     manifest: {
-        name: 'Tools for Xero',
+        name: 'UI Tweaks for Xero',
         description: 'UI shortcuts and improvements for the Xero accounting web app.',
         permissions: ['storage'],
         host_permissions: ['https://go.xero.com/*', 'https://reporting.xero.com/*'],
@@ -18,7 +18,7 @@ export default defineConfig({
         },
         browser_specific_settings: {
             gecko: {
-                id: 'tools-for-xero@purplesquirreltechnology.com',
+                id: 'ui-tweaks-for-xero@purplesquirreltechnology.com',
                 data_collection_permissions: {
                     required: ['none']
                 },

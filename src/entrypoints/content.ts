@@ -12,7 +12,7 @@ export default defineContentScript({
     matches: ['https://go.xero.com/*', 'https://reporting.xero.com/*'],
     main() {
         const styleEl = document.createElement('style');
-        styleEl.id = 'tools-for-xero-toggle-style';
+        styleEl.id = 'ui-tweaks-for-xero-toggle-style';
         document.documentElement.appendChild(styleEl);
 
         const applyState = (state: ToggleState) => {
