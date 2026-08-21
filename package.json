@@ -1,7 +1,7 @@
 {
   "name": "ui-tweaks-for-xero",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Browser extension providing bookkeeping tools and shortcuts for the Xero accounting web app.",
   "type": "module",
   "scripts": {
