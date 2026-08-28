@@ -40,6 +40,7 @@ http-client.private.env.json
 .idea/**/copilot.data.migration.*.xml
 
 # project-specific
+chrome-store
 node_modules
 site-reference/
 .wxt
