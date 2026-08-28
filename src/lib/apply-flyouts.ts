@@ -140,6 +140,9 @@ function buildPanel(flyout: MenuFlyout): HTMLDivElement {
         a.addEventListener('mouseleave', () => {
             a.style.background = '#fcfcfc';
         });
+        a.addEventListener('click', () => {
+            panel.hidden = true;
+        });
 
         li.appendChild(a);
         ul.appendChild(li);
