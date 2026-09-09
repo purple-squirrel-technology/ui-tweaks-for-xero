@@ -22,7 +22,7 @@
     "@wxt-dev/auto-icons": "^1.1.2",
     "jsdom": "^22.1.0",
     "typescript": "^5.7.0",
-    "vitest": "^3.0.0",
+    "vitest": "^4.1.11",
     "wxt": "^0.21.2"
   }
 }
