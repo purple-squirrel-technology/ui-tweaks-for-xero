@@ -17,7 +17,7 @@ A browser extension for the Xero accounting web app that adds small UI shortcuts
 ## Requirements
 
 - Node.js `22.22.2`
-- pnpm `11.18.0`
+- pnpm `12.15.0`
 
 ## Install
 
