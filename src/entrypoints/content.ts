@@ -1,11 +1,13 @@
 // noinspection JSUnusedGlobalSymbols
 
-import {auto as followSystemColorScheme, disable, enable, setFetchMethod} from 'darkreader';
+import {disable, enable, setFetchMethod} from 'darkreader';
 import {applyFlyouts} from '../lib/apply-flyouts.ts';
 import {applyMenuItems} from '../lib/apply-menu-items.ts';
 import {buildToggleStyle} from '../lib/toggle-style.ts';
 import {darkReaderSettingsItem, toggleStateItem} from '../lib/storage.ts';
-import {getDarkReaderOptions, type DarkReaderSettings} from '../lib/darkreader-settings.ts';
+import {getDarkReaderOptions} from '../lib/darkreader-settings.ts';
+import {startThemeController} from '../lib/theme-controller.ts';
+import {XERO_MATCHES} from '../lib/startup-theme.ts';
 import {FLYOUTS} from '../lib/flyouts.ts';
 import {MENU_ITEMS} from '../lib/menu-items.ts';
 import {TOGGLES, type ToggleState} from '../lib/toggles.ts';
@@ -49,11 +51,19 @@ const darkReaderFixes: NonNullable<Parameters<typeof enable>[1]> = {
 };
 
 export default defineContentScript({
-    matches: ['https://*.xero.com/*'],
+    matches: XERO_MATCHES,
     runAt: 'document_start',
     allFrames: true,
     matchAboutBlank: true,
-    main() {
+    matchOriginAsFallback: true,
+    main(ctx) {
+        setFetchMethod(window.fetch.bind(window));
+        const stopTheme = startThemeController(darkReaderSettingsItem, {
+            enable: settings => enable(getDarkReaderOptions(settings), darkReaderFixes),
+            disable,
+        }, window.matchMedia('(prefers-color-scheme: dark)'), document);
+        ctx.onInvalidated(stopTheme);
+
         const styleEl = document.createElement('style');
         styleEl.id = 'ui-tweaks-for-xero-toggle-style';
         document.documentElement.appendChild(styleEl);
@@ -66,22 +76,5 @@ export default defineContentScript({
 
         toggleStateItem.getValue().then(applyState);
         toggleStateItem.watch(applyState);
-
-        const applyDarkReaderSettings = (settings: DarkReaderSettings) => {
-            setFetchMethod(window.fetch.bind(window));
-            followSystemColorScheme(false);
-            disable();
-
-            if (settings.mode === 'system') {
-                followSystemColorScheme(getDarkReaderOptions(settings), darkReaderFixes);
-            } else if (settings.mode === 'dark') {
-                enable(getDarkReaderOptions(settings), darkReaderFixes);
-            }
-        };
-
-        darkReaderSettingsItem.getValue()
-            .then(applyDarkReaderSettings)
-            .catch(error => console.error('Failed to load Dark Reader settings', error));
-        darkReaderSettingsItem.watch(applyDarkReaderSettings);
     },
 });

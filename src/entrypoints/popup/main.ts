@@ -1,5 +1,7 @@
 import {darkReaderSettingsItem, toggleStateItem} from '@/lib/storage.ts';
 import type {DarkReaderSettings} from '@/lib/darkreader-settings.ts';
+import {browser} from 'wxt/browser';
+import {UPDATE_THEME_MESSAGE, type ThemeUpdateResponse} from '@/lib/theme-messages.ts';
 import {FLYOUTS} from '@/lib/flyouts.ts';
 import {MENU_ITEMS} from '@/lib/menu-items.ts';
 import {TOGGLES} from '@/lib/toggles.ts';
@@ -10,9 +12,22 @@ let settingsUpdateQueue = Promise.resolve();
 
 function updateDarkReaderSettings(update: Partial<DarkReaderSettings>) {
     settingsUpdateQueue = settingsUpdateQueue.then(async () => {
-        const current = await darkReaderSettingsItem.getValue();
-        await darkReaderSettingsItem.setValue({...current, ...update});
-    }).catch(error => console.error('Failed to save Dark Reader settings', error));
+        const response: ThemeUpdateResponse | undefined = await browser.runtime.sendMessage({
+            type: UPDATE_THEME_MESSAGE,
+            update,
+        });
+        if (!response?.ok) throw new Error(response?.error ?? 'Theme settings could not be saved');
+        document.getElementById('theme-error')!.textContent = '';
+    }).catch(async error => {
+        console.error('Failed to save Dark Reader settings', error);
+        document.getElementById('theme-error')!.textContent =
+            'Could not fully save dark mode settings. Please try again.';
+        try {
+            await render();
+        } catch (reloadError) {
+            console.error('Failed to reload saved theme settings', reloadError);
+        }
+    });
     return settingsUpdateQueue;
 }
 

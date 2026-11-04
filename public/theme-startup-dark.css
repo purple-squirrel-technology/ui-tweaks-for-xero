@@ -1,0 +1,6 @@
+html:not([data-tfx-theme-ready]),
+html:not([data-tfx-theme-ready]) body {
+    background-color: #181a1b !important;
+    color: #e8e6e3 !important;
+    color-scheme: dark !important;
+}

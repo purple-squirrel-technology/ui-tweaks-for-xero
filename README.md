@@ -15,6 +15,24 @@ A browser extension for the Xero accounting web app that adds small UI shortcuts
 - Firefox
 - Chrome
 
+## Navigation appearance
+
+To reduce light flashes, the extension uses the `scripting` permission to register
+startup CSS before page scripts run. Dark mode uses a dark canvas; Follow system
+uses it only when the OS prefers dark colors. Light mode registers no dark CSS.
+The temporary colors hand off to Dark Reader's base styles while it processes
+the page, and appearance adjustments do not disable and rebuild the theme.
+
+Theme settings are stored in extension storage; a background coordinator keeps
+startup CSS registrations in sync. No theme preferences are stored in Xero's
+cookies or page storage. Save failures are shown in the popup.
+
+This reduces flashes rather than eliminating them: browser painting before
+extension injection and the first navigation after install or registration
+repair can still show light colors. Registration and storage updates are not
+atomic across browser crashes. Startup colors cover the canvas and body, not
+every independently colored page element.
+
 ## Requirements
 
 - Node.js `22.22.2`

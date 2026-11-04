@@ -64,7 +64,7 @@ export const FLYOUTS: MenuFlyout[] = [
             {label: 'All', href: 'https://go.xero.com/app/bills/list/all'},
             {label: 'Draft', href: 'https://go.xero.com/app/bills/list/draft'},
             {label: 'Awaiting Approval', href: 'https://go.xero.com/app/bills/list/awaiting-approval'},
-            {label: 'Awaiting Payment', href: 'https://go.xero.com/app//bills/list/awaiting-payment'},
+            {label: 'Awaiting Payment', href: 'https://go.xero.com/app/bills/list/awaiting-payment'},
             {label: 'Paid', href: 'https://go.xero.com/app/bills/list/paid'},
             {label: 'Repeating', href: 'https://go.xero.com/app/bills/list/repeating'},
         ],

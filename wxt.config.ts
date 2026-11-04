@@ -11,8 +11,9 @@ export default defineConfig({
     manifest: {
         name: 'UI Tweaks for Xero',
         description: 'UI shortcuts and improvements for the Xero accounting web app.',
-        permissions: ['storage'],
-        host_permissions: ['https://*.xero.com/*'],
+        permissions: ['storage', 'scripting'],
+        host_permissions: ['https://go.xero.com/*', 'https://reporting.xero.com/*',
+            'https://edge.xero.com/*'],
         content_security_policy: {
             extension_pages: "script-src 'self'; object-src 'self';"
         },
