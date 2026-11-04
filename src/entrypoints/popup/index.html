@@ -6,7 +6,9 @@
     <style>
         body {
             font-family: system-ui, sans-serif;
-            width: 220px;
+            width: 280px;
+            max-height: 600px;
+            overflow-y: auto;
             margin: 0;
             padding: 12px;
         }
@@ -35,6 +37,32 @@
 
         h2:first-child {
             margin-top: 0;
+        }
+
+        .mode-control {
+            justify-content: space-between;
+        }
+
+        .mode-control select {
+            flex: 1;
+            max-width: 165px;
+        }
+
+        .appearance-control {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 2px 8px;
+        }
+
+        .appearance-control input {
+            grid-column: 1 / -1;
+            width: 100%;
+            margin: 0;
+        }
+
+        .appearance-control output {
+            color: #666;
+            font-variant-numeric: tabular-nums;
         }
     </style>
 </head>

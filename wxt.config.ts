@@ -12,7 +12,7 @@ export default defineConfig({
         name: 'UI Tweaks for Xero',
         description: 'UI shortcuts and improvements for the Xero accounting web app.',
         permissions: ['storage'],
-        host_permissions: ['https://go.xero.com/*', 'https://reporting.xero.com/*'],
+        host_permissions: ['https://*.xero.com/*'],
         content_security_policy: {
             extension_pages: "script-src 'self'; object-src 'self';"
         },

@@ -24,5 +24,8 @@
     "typescript": "^5.7.0",
     "vitest": "^3.0.0",
     "wxt": "^0.21.2"
+  },
+  "dependencies": {
+    "darkreader": "^4.9.133"
   }
 }

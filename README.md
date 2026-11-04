@@ -5,9 +5,10 @@ A browser extension for the Xero accounting web app that adds small UI shortcuts
 ## What it does
 
 - Toggles CSS changes for selected Xero UI regions
+- Applies configurable Dark Reader styling, following system, dark, or light mode
 - Adds custom flyout menus to existing nav items
 - Inserts menu items into existing Xero menus
-- Syncs on/off state through browser storage
+- Persists theme settings and on/off state through browser storage
 
 ## Supported browsers
 
