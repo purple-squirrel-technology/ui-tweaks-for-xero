@@ -1,4 +1,4 @@
-# Tools for Xero
+# UI Tweaks for Xero
 
 A browser extension for the Xero accounting web app that provides a configurable dark mode, flyout menus and other ui improvements.
 
@@ -9,6 +9,9 @@ A browser extension for the Xero accounting web app that provides a configurable
 - Adds custom flyout menus to existing nav items
 - Inserts menu items into existing Xero menus
 - Saves theme settings and on/off state through browser storage
+
+The popup opens on **Dark Mode**, with controls for mode, brightness, contrast, sepia, and grayscale.
+The **Styles** tab contains style toggles, menu flyouts, and menu items. **About** is currently blank.
 
 ## Is it safe?
 

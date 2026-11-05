@@ -18,6 +18,36 @@
             margin: 0 0 8px;
         }
 
+        [role="tablist"] {
+            display: flex;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 12px;
+        }
+
+        [role="tab"] {
+            flex: 1;
+            border: 0;
+            border-bottom: 2px solid transparent;
+            padding: 8px 4px;
+            background: transparent;
+            color: #555;
+            font: inherit;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        [role="tab"][aria-selected="true"] {
+            border-bottom-color: #1664b5;
+            color: #1664b5;
+            font-weight: 600;
+        }
+
+        [role="tab"]:focus-visible,
+        [role="tabpanel"]:focus-visible {
+            outline: 2px solid #1664b5;
+            outline-offset: -2px;
+        }
+
         label {
             display: flex;
             align-items: center;
@@ -68,8 +98,34 @@
 </head>
 <body>
 <h1>UI Tweaks for Xero</h1>
+<div role="tablist" aria-label="Settings">
+    <button type="button" id="dark-mode-tab" role="tab" aria-controls="dark-mode-panel" aria-selected="true" tabindex="0">Dark Mode</button>
+    <button type="button" id="styles-tab" role="tab" aria-controls="styles-panel" aria-selected="false" tabindex="-1">Styles</button>
+    <button type="button" id="about-tab" role="tab" aria-controls="about-panel" aria-selected="false" tabindex="-1">About</button>
+</div>
+<div id="dark-mode-panel" role="tabpanel" aria-labelledby="dark-mode-tab" tabindex="0">
 <p id="theme-error" role="alert"></p>
-<div id="toggles"></div>
+<div id="dark-mode-controls"></div>
+</div>
+<div id="styles-panel" role="tabpanel" aria-labelledby="styles-tab" tabindex="0" hidden>
+    <div id="toggles"></div>
+</div>
+<div id="about-panel" role="tabpanel" aria-labelledby="about-tab" tabindex="0" hidden>
+    <div style="display: flex; align-items: center; gap: 12px;">
+        <img
+                src="../../assets/pst-logo.png"
+                alt="Purple Squirrel Technology logo"
+                width="64"
+                height="64"
+                style="flex-shrink: 0;"
+        />
+        <div style="flex: 1; text-align: center;">
+            <div>Made by</div>
+            <div><a href="https://purplesquirreltechnology.com" target="_blank" rel="noopener noreferrer">Purple Squirrel Technology</a></div>
+            <div>Automation for Accounting</div>
+        </div>
+    </div>
+</div>
 <script type="module" src="main.ts"></script>
 </body>
 </html>

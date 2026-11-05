@@ -10,6 +10,46 @@ type AppearanceSetting = 'brightness' | 'contrast' | 'sepia' | 'grayscale';
 
 let settingsUpdateQueue = Promise.resolve();
 
+function initializeTabs() {
+    const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+
+    function activateTab(selected: HTMLButtonElement) {
+        for (const tab of tabs) {
+            const active = tab === selected;
+            tab.setAttribute('aria-selected', String(active));
+            tab.tabIndex = active ? 0 : -1;
+            document.getElementById(tab.getAttribute('aria-controls')!)!.hidden = !active;
+        }
+    }
+
+    for (const [index, tab] of tabs.entries()) {
+        tab.addEventListener('click', () => activateTab(tab));
+        tab.addEventListener('keydown', event => {
+            let nextIndex: number;
+            switch (event.key) {
+                case 'ArrowRight':
+                    nextIndex = (index + 1) % tabs.length;
+                    break;
+                case 'ArrowLeft':
+                    nextIndex = (index - 1 + tabs.length) % tabs.length;
+                    break;
+                case 'Home':
+                    nextIndex = 0;
+                    break;
+                case 'End':
+                    nextIndex = tabs.length - 1;
+                    break;
+                default:
+                    return;
+            }
+            event.preventDefault();
+            const nextTab = tabs[nextIndex]!;
+            activateTab(nextTab);
+            nextTab.focus();
+        });
+    }
+}
+
 function updateDarkReaderSettings(update: Partial<DarkReaderSettings>) {
     settingsUpdateQueue = settingsUpdateQueue.then(async () => {
         const response: ThemeUpdateResponse | undefined = await browser.runtime.sendMessage({
@@ -126,12 +166,13 @@ function makeToggleLabel(
 
 async function render() {
     const container = document.getElementById('toggles');
-    if (!container) return;
+    const darkModeContainer = document.getElementById('dark-mode-controls');
+    if (!container || !darkModeContainer) return;
 
     const state = await toggleStateItem.getValue();
     const darkReaderSettings = await darkReaderSettingsItem.getValue();
     const children: Node[] = [];
-    children.push(makeDarkReaderControls(darkReaderSettings));
+    darkModeContainer.replaceChildren(makeDarkReaderControls(darkReaderSettings));
 
     if (TOGGLES.length > 0) {
         const heading = document.createElement('h2');
@@ -157,4 +198,5 @@ async function render() {
     container.replaceChildren(...children);
 }
 
+initializeTabs();
 render().then(r => console.log('Popup rendered', r)).catch(e => console.error('Error rendering popup', e));
