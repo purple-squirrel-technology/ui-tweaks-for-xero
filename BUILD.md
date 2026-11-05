@@ -5,7 +5,7 @@ Use these steps to reproduce the Firefox extension from source.
 ## Requirements
 
 - Node.js `22.22.2` (`.node-version`)
-- pnpm `11.18.0` (`packageManager` in `package.json`)
+- pnpm `12.15.0` (`packageManager` in `package.json`)
 
 ## Build
 
